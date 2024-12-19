@@ -2,9 +2,11 @@ import os
 
 from langchain_community.document_loaders import DirectoryLoader, PyPDFLoader
 from langchain.text_splitter import CharacterTextSplitter
-from langchain_openai import OpenAIEmbeddings
+# from langchain_openai import OpenAIEmbeddings
+from langchain_community.embeddings import OllamaEmbeddings
 from langchain_community.graphs import Neo4jGraph
-from langchain_openai import ChatOpenAI
+# from langchain_openai import ChatOpenAI
+from langchain_ollama import ChatOllama
 from langchain_experimental.graph_transformers import LLMGraphTransformer
 from langchain_community.graphs.graph_document import Node, Relationship
 
@@ -13,20 +15,23 @@ load_dotenv()
 
 DOCS_PATH = "llm-knowledge-graph/data/course/pdfs"
 
-llm = ChatOpenAI(
-    openai_api_key=os.getenv('OPENAI_API_KEY'), 
-    model_name="gpt-3.5-turbo"
-)
+# llm = ChatOpenAI(
+#     openai_api_key=os.getenv('OPENAI_API_KEY'), 
+#     model_name="gpt-3.5-turbo"
+# )
+llm = ChatOllama(model="llama3.1:8b")
 
-embedding_provider = OpenAIEmbeddings(
-    openai_api_key=os.getenv('OPENAI_API_KEY'),
-    model="text-embedding-ada-002"
-    )
+# embedding_provider = OpenAIEmbeddings(
+#     openai_api_key=os.getenv('OPENAI_API_KEY'),
+#     model="text-embedding-ada-002"
+#     )
+embedding_provider = OllamaEmbeddings(model="nomic-embed-text:latest")
 
 graph = Neo4jGraph(
     url=os.getenv('NEO4J_URI'),
     username=os.getenv('NEO4J_USERNAME'),
     password=os.getenv('NEO4J_PASSWORD')
+    # database=os.getenv('NEO4J_DATABASE')
 )
 
 doc_transformer = LLMGraphTransformer(
@@ -97,11 +102,14 @@ for chunk in chunks:
     graph.add_graph_documents(graph_docs)
 
 # Create the vector index
+
+# `vector.dimensions`: 768,
+# `vector.dimensions`: 1536,
 graph.query("""
     CREATE VECTOR INDEX `chunkVector`
     IF NOT EXISTS
     FOR (c: Chunk) ON (c.textEmbedding)
     OPTIONS {indexConfig: {
-    `vector.dimensions`: 1536,
+    `vector.dimensions`: 768,
     `vector.similarity_function`: 'cosine'
     }};""")

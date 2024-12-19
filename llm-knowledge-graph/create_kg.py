@@ -110,6 +110,6 @@ graph.query("""
     IF NOT EXISTS
     FOR (c: Chunk) ON (c.textEmbedding)
     OPTIONS {indexConfig: {
-    `vector.dimensions`: 1024,
+    `vector.dimensions`: 768,
     `vector.similarity_function`: 'cosine'
     }};""")

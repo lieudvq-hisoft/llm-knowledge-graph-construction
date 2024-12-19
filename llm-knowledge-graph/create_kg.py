@@ -25,7 +25,7 @@ llm = ChatOllama(model="llama3.1:8b")
 #     openai_api_key=os.getenv('OPENAI_API_KEY'),
 #     model="text-embedding-ada-002"
 #     )
-embedding_provider = OllamaEmbeddings(model="nomic-embed-text:latest")
+embedding_provider = OllamaEmbeddings(model="bge-m3:latest")
 
 graph = Neo4jGraph(
     url=os.getenv('NEO4J_URI'),

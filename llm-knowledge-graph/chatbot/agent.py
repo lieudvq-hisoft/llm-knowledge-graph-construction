@@ -24,30 +24,29 @@ kg_chat = chat_prompt | llm | StrOutputParser()
 
 tools = [
     Tool.from_function(
-        name="General Chat",
-        description="For general knowledge graph chat not covered by other tools",
-        func=kg_chat.invoke,
-    ), 
-    Tool.from_function(
-        name="Lesson content search",
-        description="For when you need to find information in the lesson content",
+        name="Khuyến học content search",
+        description="Use this tool to find information specifically from the book 'Khuyến học' by Fukuzawa Yukichi",
         func=find_chunk, 
     ),
-    Tool.from_function(
-        name="Knowledge Graph information",
-        description="For when you need to find information about the entities and relationship in the knowledge graph",
-        func = run_cypher,
-    )
+    # Tool.from_function(
+    #     name="General Chat",
+    #     description="For general knowledge graph chat not covered by other tools",
+    #     func=kg_chat.invoke,
+    # ), 
+    # Tool.from_function(
+    #     name="Knowledge Graph information",
+    #     description="For when you need to find information about the entities and relationship in the knowledge graph",
+    #     func = run_cypher,
+    # )
 ]
 
 def get_memory(session_id):
     return Neo4jChatMessageHistory(session_id=session_id, graph=graph)
 
 agent_prompt = PromptTemplate.from_template("""
-You are a Neo4j, Knowledge graph, and generative AI expert.
+You are an expert on the book "Khuyến học" by Fukuzawa Yukichi and topics related to education, philosophy of life, and Japanese culture.                                            
 Be as helpful as possible and return as much information as possible.
-Only answer questions that relate to Neo4j, graphs, cypher, generative AI, or associated subjects.
-        
+Only answer questions related to the content in the "Khuyến học" book by Fukuzawa Yukichi.
 Always use a tool and only use the information provided in the context.
 
 TOOLS:

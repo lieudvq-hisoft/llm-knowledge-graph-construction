@@ -22,5 +22,5 @@ from langchain_openai import OpenAIEmbeddings
 # embeddings = OpenAIEmbeddings(
 #     openai_api_key=os.getenv('OPENAI_API_KEY')
 # )
-embeddings = OllamaEmbeddings(model="nomic-embed-text:latest")
+embeddings = OllamaEmbeddings(model="bge-m3:latest")
 # end::embedding[]

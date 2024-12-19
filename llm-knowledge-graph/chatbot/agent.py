@@ -24,7 +24,7 @@ kg_chat = chat_prompt | llm | StrOutputParser()
 
 tools = [
     Tool.from_function(
-        name="Khuyến học content search",
+        name="Tax content search",
         description="Use this tool to find information specifically from the book 'Khuyến học' by Fukuzawa Yukichi",
         func=find_chunk, 
     ),
@@ -44,10 +44,9 @@ def get_memory(session_id):
     return Neo4jChatMessageHistory(session_id=session_id, graph=graph)
 
 agent_prompt = PromptTemplate.from_template("""
-You are an expert on the book "Khuyến học" by Fukuzawa Yukichi and topics related to education, philosophy of life, and Japanese culture.                                            
-Be as helpful as possible and return as much information as possible.
-Only answer questions related to the content in the "Khuyến học" book by Fukuzawa Yukichi.
-Always use a tool and only use the information provided in the context.
+You are an expert on Vietnamese tax regulations, including accounting principles, tax laws, and compliance requirements.  
+Your role is to provide accurate, detailed, and context-specific answers, primarily based on the "Sổ tay thuế Việt Nam 2024" document that has been provided.  
+Always strive to offer comprehensive and clear responses, using the information from this document as your main source.
 
 TOOLS:
 ------
